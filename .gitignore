@@ -1,0 +1,7 @@
+.idea/
+venv/
+config.yaml
+SweetSpace.xmind
+**/__pycache__/
+.vscode/
+

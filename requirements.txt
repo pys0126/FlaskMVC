@@ -1,0 +1,9 @@
+flask
+httpx
+redis
+pillow
+pyyaml
+pymysql
+gunicorn
+flask-cors
+flask-sqlalchemy
