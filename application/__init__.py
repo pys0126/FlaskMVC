@@ -2,17 +2,18 @@ from flask import Flask
 from flask_cors import CORS
 from sqlalchemy.engine import URL
 from werkzeug.exceptions import MethodNotAllowed
-from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.controller.UserController import user
-from application.config.DatabaseConfig import RedisConfig
-from application.config.ServerConfig import ServerConfig
 from application.controller.IndexController import index
-from application.exception.BasicException import BasicException
-from application.exception.MethodException import MethodException
+from application.config.ServerConfig import ServerConfig
+from application.config.DatabaseConfig import RedisConfig
 from application.exception.TypeException import TypeException
-from application.config.DatabaseConfig import MysqlConfig, SqlalchemyConfig
 from application.util.MysqlUtil import mysql_db, mysql_session
+from application.exception.BasicException import BasicException
+from application.enumeration.StatusCodeEnum import StatusCodeEnum
+from application.exception.MethodException import MethodException
+from application.config.DatabaseConfig import MysqlConfig, SqlalchemyConfig
 
+# 创建Flask实例
 app: Flask = Flask(__name__)
 CORS(app=app)  # 设置允许跨越
 # 连接信息（使用URL构造对象，防止有非法字符导致连接出错）
