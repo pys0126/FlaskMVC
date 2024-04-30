@@ -13,7 +13,7 @@
 
 ### 二、开发顺序（推荐）
 
-1. 在`application/model`目录，创建数据库模型。
+1. 在`application/model`目录，创建数据库模型，并在`application/model/__init__.py`导入。
 2. 在`application/mapper`目录，创建表操作。 
 3. 在`application/logic`目录，创建业务逻辑。
 4. 在`application/controller`目录，创建控制器。

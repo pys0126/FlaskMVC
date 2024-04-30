@@ -26,6 +26,8 @@ app.config["SQLALCHEMY_ECHO"] = SqlalchemyConfig.on_echo
 mysql_db.init_app(app=app)
 # 创建数据表（如果不存在）
 with app.app_context():
+    # 导入所有待创建的数据表
+    from application.model import *
     mysql_db.create_all()
 
 # 异常注册

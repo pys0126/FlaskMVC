@@ -12,12 +12,13 @@ command: str = f"gunicorn --log-level debug application:app -b {ServerConfig.hos
 system: str = platform.system()
 
 if __name__ == "__main__":
-    # 创建超级用户
-    mysql_session.add(instance=UserModel(
-        nickname="超级管理员",
-        username=ServerConfig.super_admin_username,
-        password=ServerConfig.super_admin_password
-    ))
+    with app.app_context():
+        # 创建超级用户
+        mysql_session.add(instance=UserModel(
+            nickname="超级管理员",
+            username=ServerConfig.super_admin_username,
+            password=ServerConfig.super_admin_password
+        ))
 
     # 启动Flask服务器
     if system == "Linux":
