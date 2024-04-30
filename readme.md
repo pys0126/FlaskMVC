@@ -21,9 +21,10 @@
 
 ### 三、运行项目
 
+1. Run：`python main.py`。
+
 **注意：** Windows下自动使用Flask默认的HTTP服务器，Linux下将自动使用`gunicorn`作为HTTP服务器。
 
-1. Run：`python main.py`。
 
 ### 四、扩展
 
