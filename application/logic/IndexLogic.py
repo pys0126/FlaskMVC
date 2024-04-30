@@ -1,8 +1,10 @@
-from application.config.ServerConfig import ServerConfig
-from application.enumeration.StatusCodeEnum import StatusCodeEnum
-from application.exception.BasicException import BasicException
-from application.util.EmailUtil import send_email
+from application.util.MysqlUtil import mysql_session
 from application.util.RedisUtil import RedisUtil
+from application.util.EmailUtil import send_email
+from application.model.UserModel import UserModel
+from application.config.ServerConfig import ServerConfig
+from application.exception.BasicException import BasicException
+from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.StringUtil import generate_verification_code, is_valid_email
 
 
@@ -32,3 +34,20 @@ class IndexLogic:
             raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="验证码发送失败，请稍后再试")
         # 保存验证码到redis
         cls.redis_client.set_value(key=email, value=code, ex=ServerConfig.email_verification_code_expire)
+
+    @classmethod
+    def create_admin_user(cls) -> None:
+        """
+        创建管理员用户
+        :return:
+        """
+        try:
+            # 创建超级用户
+            mysql_session.add(instance=UserModel(
+                nickname="超级管理员",
+                username=ServerConfig.super_admin_username,
+                password=ServerConfig.super_admin_password
+            ))
+            mysql_session.commit()
+        except Exception:
+            mysql_session.rollback()

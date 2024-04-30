@@ -2,8 +2,7 @@ import os
 import platform
 from application import app
 from application.config.ServerConfig import ServerConfig
-from application.model.UserModel import UserModel
-from application.util.MysqlUtil import mysql_session
+from application.logic.IndexLogic import IndexLogic
 
 
 # 定义启动命令
@@ -14,11 +13,7 @@ system: str = platform.system()
 if __name__ == "__main__":
     with app.app_context():
         # 创建超级用户
-        mysql_session.add(instance=UserModel(
-            nickname="超级管理员",
-            username=ServerConfig.super_admin_username,
-            password=ServerConfig.super_admin_password
-        ))
+        IndexLogic.create_admin_user()
 
     # 启动Flask服务器
     if system == "Linux":
