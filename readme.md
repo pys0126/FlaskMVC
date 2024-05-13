@@ -1,10 +1,10 @@
 # Flask后端快速开发模板
 
-项目使用`Python>=3.7`，将`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`集成，包含各种工具包，方便快速开发。
+灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用登录验证装饰器控制接口访问权限，会话管理采用`Token` + `Redis`方式，为什么不用JWT？因为我想踢掉其他客户端会话。另外集成了字符串、日期时间等工具包，方便快速开发。
 
 ## 简要说明
 
-强烈推荐使用`venv`环境，避免环境冲突；整个项目应关注于`application`目录下的内容，其他目录为辅助工具。
+项目使用`Python>=3.7`，强烈推荐使用`venv`环境，避免环境冲突；整个项目应关注于`application`目录下的内容，其他目录为辅助工具。
 
 ### 一、配置项目
 
