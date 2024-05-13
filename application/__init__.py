@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy.engine import URL
+from application.util.StringUtil import random_uuid
 from werkzeug.exceptions import MethodNotAllowed
 from application.controller.UserController import user
 from application.controller.IndexController import index
@@ -15,6 +16,8 @@ from application.config.DatabaseConfig import MysqlConfig, SqlalchemyConfig
 
 # 创建Flask实例
 app: Flask = Flask(__name__)
+# 设置SECRET_KEY密钥，session用
+app.config["SECRET_KEY"] = random_uuid()
 CORS(app=app)  # 设置允许跨越
 # 连接信息（使用URL构造对象，防止有非法字符导致连接出错）
 app.config["SQLALCHEMY_DATABASE_URI"] = URL.create(drivername="mysql+pymysql", username=MysqlConfig.username,

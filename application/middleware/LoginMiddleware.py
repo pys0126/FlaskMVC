@@ -1,13 +1,13 @@
 """
 登录相关中间件
 """
-from functools import wraps
 from typing import Any
-from flask import request
-from application.exception.BasicException import BasicException
-from application.enumeration.StatusCodeEnum import StatusCodeEnum
+from functools import wraps
+from flask import request, session
 from application.util.TokenUtil import verify_token
 from application.config.ServerConfig import ServerConfig
+from application.exception.BasicException import BasicException
+from application.enumeration.StatusCodeEnum import StatusCodeEnum
 
 
 def login_required(func: Any):
@@ -19,7 +19,9 @@ def login_required(func: Any):
             # 验证用户Token
             if not verify_token(token=token):
                 raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="非法访问，请先登录")
-            return func(token=token, *args, **kwargs)
+            # 存储Token到session
+            session[ServerConfig.token_name] = token
+            return func(*args, **kwargs)
         except IndexError:
             raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="Token格式错误")
         except AttributeError:

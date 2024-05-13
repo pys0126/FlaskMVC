@@ -1,8 +1,8 @@
 import os
 import platform
 from application import app
+from application.logic import IndexLogic
 from application.config.ServerConfig import ServerConfig
-from application.logic.IndexLogic import IndexLogic
 
 
 # 定义启动命令
