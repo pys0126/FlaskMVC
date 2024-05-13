@@ -21,6 +21,7 @@ def login_required(func: Any):
                 raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="非法访问，请先登录")
             # 存储Token到session
             session[ServerConfig.token_name] = token
+            session.permanent = True  # 设置session永久有效，除非被删除
             return func(*args, **kwargs)
         except IndexError:
             raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="Token格式错误")
