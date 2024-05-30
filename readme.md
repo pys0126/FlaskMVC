@@ -1,4 +1,4 @@
-# Flask后端快速开发模板
+# Flask MVC开发模板
 
 灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用登录验证装饰器控制接口访问权限，会话管理采用`Token` + `Redis`方式，为什么不用JWT？因为我想踢掉其他客户端会话。另外集成了字符串、日期时间等工具包，方便快速开发。
 
@@ -14,7 +14,7 @@
 ### 二、开发顺序（推荐）
 
 1. 在`application/model`目录，创建数据库模型，并在`application/model/__init__.py`导入。
-2. 在`application/mapper`目录，创建表操作。 
+2. 在`application/mapper`目录，创建表操作。
 3. 在`application/logic`目录，创建业务逻辑。
 4. 在`application/controller`目录，创建控制器。
 5. 注册蓝图、异常均在`application/__init__.py`。
@@ -24,7 +24,6 @@
 1. Run：`python main.py`。
 
 **注意：** Windows下自动使用Flask默认的HTTP服务器，Linux下将自动使用`gunicorn`作为HTTP服务器。
-
 
 ### 四、扩展
 

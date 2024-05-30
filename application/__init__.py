@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy.engine import URL
@@ -14,6 +15,9 @@ from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.exception.MethodException import MethodException
 from application.config.DatabaseConfig import MysqlConfig, SqlalchemyConfig
 
+
+# 创建日志目录（如果不存在）
+os.makedirs(name=ServerConfig.log_dir, exist_ok=True)
 # 创建Flask实例
 app: Flask = Flask(__name__)
 # 设置SECRET_KEY密钥，session用

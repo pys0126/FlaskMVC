@@ -1,5 +1,7 @@
-from typing import Union, Any
+import traceback
 from flask import Response
+from typing import Union, Any
+from application.util.LogUtil import write_error_log
 from application.util.ResponseUtil import ResponseUtil
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.TimeUtil import now_format_datetime
@@ -27,7 +29,8 @@ class TypeException(TypeError):
         :return:
         """
         type_exception: TypeException = TypeException()
-        # 打印异常堆栈信息
+        # 打印、写入异常堆栈信息
         print(f"{now_format_datetime()}\tErrorInfo => ", exception)
+        write_error_log(traceback.format_exc())
         # 返回Response
         return ResponseUtil(code=type_exception.status_code, message=type_exception.error_message).fail()

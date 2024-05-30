@@ -3,6 +3,7 @@ ServerConfig:
   host: '0.0.0.0'  # 主机
   port: 6868  # 端口
   workers: 1  # 进程数
+  log_dir: 'logs'  # 日志目录路径
   token_expire: 604800  # Token有效期（秒），用户登录有效期
   token_name: 'Authorization'  # Token在Header中的名称和session的键名
   verification_code_expire: 300  # 验证码有效期（秒）

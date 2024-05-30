@@ -13,6 +13,7 @@ class ServerConfig:
     workers: int = int(SERVER_CONFIG.get("workers", 1))  # 服务的进程数
 
     # 其他配置项
+    log_dir: str = SERVER_CONFIG.get("log_path", "logs")  # 日志目录路径
     # Token过期时间，默认7天
     token_expire: int = int(SERVER_CONFIG.get("token_expire", int(timedelta(days=7).total_seconds())))
     token_name: str = "Authorization"  # Token在Header中的名称和session的键名

@@ -1,6 +1,7 @@
 import traceback
-from typing import Union, Any
 from flask import Response
+from typing import Union, Any
+from application.util.LogUtil import write_error_log
 from application.util.ResponseUtil import ResponseUtil
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.TimeUtil import now_format_datetime
@@ -28,13 +29,9 @@ class BasicException(Exception):
         :param exception: 异常类
         :return:
         """
-        if isinstance(exception, BasicException):
-            # 打印异常堆栈信息
-            print(f"{now_format_datetime()}\tErrorInfo => ", traceback.format_exc())
-            return ResponseUtil(code=exception.status_code, message=exception.error_message).fail()
-        else:
-            basic_exception: BasicException = BasicException()
-            # 打印异常堆栈信息
-            print(f"{now_format_datetime()}\tErrorInfo => \n", traceback.format_exc())
-            # 返回Response
-            return ResponseUtil(code=basic_exception.status_code, message=basic_exception.error_message).fail()
+        basic_exception: BasicException = BasicException()
+        # 打印、写入异常堆栈信息
+        print(f"{now_format_datetime()}\tErrorInfo => ", exception)
+        write_error_log(traceback.format_exc())
+        # 返回Response
+        return ResponseUtil(code=basic_exception.status_code, message=basic_exception.error_message).fail()
