@@ -23,8 +23,7 @@ def now_user_info() -> Response:
     """
     获取当前用户信息
     """
-    token: str = session.get(ServerConfig.token_name)
-    return ResponseUtil(data=UserLogic.now_user_info(token=token)).success()
+    return ResponseUtil(data=UserLogic.now_user_info(user_id=session.get("user"))).success()
 
 
 @user.post("/login")
@@ -41,8 +40,7 @@ def logout() -> Response:
     """
     退出登录
     """
-    token: str = session.get(ServerConfig.token_name)
-    UserLogic.logout(token=token)
+    UserLogic.logout(user_id=session.get("user"))
     session.pop(ServerConfig.token_name)  # 删除session中的token
     return ResponseUtil().success()
 
@@ -53,8 +51,7 @@ def change_avatar() -> Response:
     """
     更改头像
     """
-    token: str = session.get(ServerConfig.token_name)
-    UserLogic.change_avatar(avatar_url=request.args.get("avatar_url"), token=token)
+    UserLogic.change_avatar(avatar_url=request.args.get("avatar_url"), user_id=session.get("user"))
     return ResponseUtil(message="修改头像成功").success()
 
 
@@ -64,9 +61,8 @@ def change_password() -> Response:
     """
     更改密码
     """
-    token: str = session.get(ServerConfig.token_name)
     UserLogic.change_password(old_password=request.args.get("old_password"),
-                              new_password=request.args.get("new_password"), token=token)
+                              new_password=request.args.get("new_password"), user_id=session.get("user"))
     return ResponseUtil(message="修改密码成功").success()
 
 
@@ -76,8 +72,7 @@ def change_nickname() -> Response:
     """
     更改昵称
     """
-    token: str = session.get(ServerConfig.token_name)
-    UserLogic.change_nickname(nickname=request.args.get("nickname"), token=token)
+    UserLogic.change_nickname(nickname=request.args.get("nickname"), user_id=session.get("user"))
     return ResponseUtil(message="修改昵称成功").success()
 
 
@@ -87,6 +82,6 @@ def change_email() -> Response:
     """
     更改邮箱
     """
-    token: str = session.get(ServerConfig.token_name)
-    UserLogic.change_email(email=request.args.get("email"), valid_code=request.args.get("valid_code"), token=token)
+    UserLogic.change_email(email=request.args.get("email"), valid_code=request.args.get("valid_code"),
+                           user_id=session.get("user"))
     return ResponseUtil(message="修改邮箱成功").success()

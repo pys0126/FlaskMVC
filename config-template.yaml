@@ -6,7 +6,7 @@ ServerConfig:
   log_dir: 'logs'  # 日志目录路径
   file_max_size: 3145728  # 文件最大上传大小（字节）
   token_expire: 604800  # Token有效期（秒），用户登录有效期
-  token_name: 'Authorization'  # Token在Header中的名称和session的键名
+  token_name: 'Authorization'  # Token在Header中的名称的键名
 
   # 默认超级管理员
   super_admin_username: 'admin'  # 默认超级管理员用户名

@@ -23,7 +23,7 @@ def get_info_by_username(username: str) -> Optional[UserModel]:
     return result
 
 
-def get_info_by_id(user_id: str) -> Optional[UserModel]:
+def get_info_by_id(user_id: int) -> Optional[UserModel]:
     """
     根据用户ID获取用户信息
     :param user_id: 用户ID
@@ -49,7 +49,7 @@ def insert(user_model: UserModel) -> bool:
         return False
 
 
-def update_by_id(user_id: str, update_dict: dict) -> bool:
+def update_by_id(user_id: int, update_dict: dict) -> bool:
     """
     根据ID更新数据
     :param user_id: 用户ID

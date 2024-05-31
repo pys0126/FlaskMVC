@@ -44,17 +44,17 @@ def verify_token(token: str) -> bool:
         return False
 
 
-def clear_token(token: str) -> bool:
+def clear_token(user_id: int) -> bool:
     """
     清除token
-    :param token: token
+    :param user_id: user_id
     :return: None
     """
     try:
-        user_id: str = base64_decode(text=token).split("|")[0]
+        user_id: str = str(user_id)
         # 从redis中获取token
         redis_token: Optional[str] = redis_client.get_value(key=user_id)
-        if redis_token != token:
+        if redis_token is None:
             return False
         redis_client.delete_by_key(key=user_id)  # 删除redis缓存的token
         return True

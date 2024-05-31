@@ -7,7 +7,7 @@ from application.util.RedisUtil import RedisUtil
 from application.model.UserModel import UserModel
 from application.exception.BasicException import BasicException
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
-from application.util.TokenUtil import clear_token, get_user_id, generate_token
+from application.util.TokenUtil import clear_token, generate_token
 from application.util.StringUtil import random_uuid, md5_encode, is_valid_url, is_valid_password, is_valid_email
 
 
@@ -15,13 +15,12 @@ from application.util.StringUtil import random_uuid, md5_encode, is_valid_url, i
 redis_client: RedisUtil = RedisUtil()
 
 
-def now_user_info(token: str) -> Optional[dict]:
+def now_user_info(user_id: int) -> Optional[dict]:
     """
     获取当前用户信息
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    user_id: str = get_user_id(token)
     user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
     if user_model is None:
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="用户不存在")
@@ -80,7 +79,7 @@ def login(data: dict) -> str:
     """
     登录
     :param data: 用户信息字典
-    :return: Token
+    :return: user_id
     """
     # 检查必填项
     if not all([data.get("username"), data.get("password")]):
@@ -99,24 +98,23 @@ def login(data: dict) -> str:
     return generate_token(user_id=user_model.id)
 
 
-def logout(token: str) -> None:
+def logout(user_id: int) -> None:
     """
     退出登录
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    if not clear_token(token=token):  # 清空token
+    if not clear_token(user_id=user_id):  # 清空token
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="用户会话异常")
 
 
-def change_avatar(avatar_url: str, token: str) -> None:
+def change_avatar(avatar_url: str, user_id: int) -> None:
     """
     修改头像
     :param avatar_url: 头像URL
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    user_id: str = get_user_id(token=token)
     user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
     # 检查用户是否存在
     if not user_model:
@@ -129,15 +127,14 @@ def change_avatar(avatar_url: str, token: str) -> None:
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
-def change_password(old_password: str, new_password: str, token: str) -> None:
+def change_password(old_password: str, new_password: str, user_id: int) -> None:
     """
     修改密码
     :param old_password: 旧密码
     :param new_password: 新密码
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    user_id: str = get_user_id(token=token)
     user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
     # 检查用户是否存在
     if not user_model:
@@ -157,14 +154,13 @@ def change_password(old_password: str, new_password: str, token: str) -> None:
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
-def change_nickname(nickname: str, token: str) -> None:
+def change_nickname(nickname: str, user_id: int) -> None:
     """
     修改昵称
     :param nickname: 昵称
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    user_id: str = get_user_id(token=token)
     user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
     # 检查用户是否存在
     if not user_model:
@@ -177,15 +173,14 @@ def change_nickname(nickname: str, token: str) -> None:
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
-def change_email(email: str, valid_code: str, token: str) -> None:
+def change_email(email: str, valid_code: str, user_id: int) -> None:
     """
     修改邮箱
     :param email: 邮箱
     :param valid_code: 邮箱验证码
-    :param token: Token
+    :param user_id: user_id
     :return:
     """
-    user_id: str = get_user_id(token=token)
     user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
     # 检查用户是否存在
     if not user_model:
