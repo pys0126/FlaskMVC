@@ -17,8 +17,7 @@ class ServerConfig:
     # Token过期时间，默认7天
     token_expire: int = int(SERVER_CONFIG.get("token_expire", int(timedelta(days=7).total_seconds())))
     token_name: str = "Authorization"  # Token在Header中的名称和session的键名
-    # 邮件验证码过期时间（秒），默认5分钟
-    email_verification_code_expire: int = int(SERVER_CONFIG.get("verification_code_expire", 300))
+
     file_max_size: int = int(SERVER_CONFIG.get("file_max_size", 1024 * 1024 * 3))  # 文件最大上传大小（字节），默认3M
 
     # 默认超级管理员

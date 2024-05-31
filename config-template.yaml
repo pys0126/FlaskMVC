@@ -4,12 +4,19 @@ ServerConfig:
   port: 6868  # 端口
   workers: 1  # 进程数
   log_dir: 'logs'  # 日志目录路径
+  file_max_size: 3145728  # 文件最大上传大小（字节）
   token_expire: 604800  # Token有效期（秒），用户登录有效期
   token_name: 'Authorization'  # Token在Header中的名称和session的键名
-  verification_code_expire: 300  # 验证码有效期（秒）
-  file_max_size: 3145728  # 文件最大上传大小（字节）
+
+  # 默认超级管理员
   super_admin_username: 'admin'  # 默认超级管理员用户名
-  super_admin_password: 'fwadsa12321'  # 默认超级管理员密码（至少一个字母，至少一个数字，至少为6位）
+  super_admin_password: 'admin123'  # 默认超级管理员密码（至少一个字母，至少一个数字，至少为6位）
+
+# 邮箱配置
+EmailConfig:
+  email_from: 'xxx@163.com'  # 发件邮箱
+  email_password: 'XXX'  # 邮箱密码/SMTP授权码
+  email_code_expire: 300  # 邮箱验证码有效期（秒）
 
 # 数据库配置
 DatabaseConfig:
