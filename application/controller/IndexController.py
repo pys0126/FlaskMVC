@@ -15,3 +15,12 @@ def send_verification_code() -> Response:
     """
     IndexLogic.send_verification_code(email=request.args.get("email"))
     return ResponseUtil().success()
+
+
+@index.get("/")
+@index.get("/index")
+def home() -> Response:
+    """
+    主页，无实际用途
+    """
+    return ResponseUtil().success()

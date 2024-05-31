@@ -3,9 +3,9 @@
 """
 from flask import session
 from typing import Optional
-from application.mapper import UserMapper
 from application.util.RedisUtil import RedisUtil
 from application.model.UserModel import UserModel
+from application.mapper.UserMapper import UserMapper
 from application.exception.BasicException import BasicException
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.TokenUtil import clear_token, generate_token
@@ -22,7 +22,7 @@ def now_user_info(user_id: int) -> Optional[dict]:
     :param user_id: user_id
     :return:
     """
-    user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
+    user_model: Optional[UserModel] = UserMapper.get_info_by_id(model_id=user_id)
     if user_model is None:
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="用户不存在")
     user_info: dict = user_model.to_dict()
@@ -30,13 +30,13 @@ def now_user_info(user_id: int) -> Optional[dict]:
     return user_info
 
 
-def info_list() -> list:
+def get_info_list() -> list:
     """
     获取用户信息列表
     :return:
     """
     result: list[Optional[dict]] = []
-    for user_model in UserMapper.info_list():
+    for user_model in UserMapper.get_info_list():
         user_info: dict = user_model.to_dict()
         user_info.pop("password")  # 删除密码字段
         result.append(user_info)
@@ -72,7 +72,7 @@ def registered(data: dict, valid_code: str) -> None:
     data["password"] = md5_encode(text=str(data.get("password")))  # md5加密密码，先转为字符串
     user_model: UserModel = UserModel(**data)
     user_model.id = random_uuid()  # 随机生成ID
-    if not UserMapper.insert(user_model=user_model):
+    if not UserMapper.insert(model=user_model):
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
@@ -117,7 +117,7 @@ def change_avatar(avatar_url: str, user_id: int) -> None:
     :param user_id: user_id
     :return:
     """
-    user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
+    user_model: Optional[UserModel] = UserMapper.get_info_by_id(model_id=user_id)
     # 检查用户是否存在
     if not user_model:
         raise BasicException(status_code=StatusCodeEnum.NOT_FOUND_ERROR.value, error_message="该用户不存在")
@@ -125,7 +125,7 @@ def change_avatar(avatar_url: str, user_id: int) -> None:
     if not avatar_url or not is_valid_url(text=avatar_url):
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="请输入正确URL")
     # 修改头像
-    if not UserMapper.update_by_id(user_id=user_id, update_dict={"avatar": avatar_url}):
+    if not UserMapper.update_by_id(model_id=user_id, update_dict={"avatar": avatar_url}):
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
@@ -137,7 +137,7 @@ def change_password(old_password: str, new_password: str, user_id: int) -> None:
     :param user_id: user_id
     :return:
     """
-    user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
+    user_model: Optional[UserModel] = UserMapper.get_info_by_id(model_id=user_id)
     # 检查用户是否存在
     if not user_model:
         raise BasicException(status_code=StatusCodeEnum.NOT_FOUND_ERROR.value, error_message="该用户不存在")
@@ -152,7 +152,7 @@ def change_password(old_password: str, new_password: str, user_id: int) -> None:
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value,
                              error_message="密码不符合规范（至少一个字母，至少一个数字，至少为6位）")
     # 修改密码
-    if not UserMapper.update_by_id(user_id=user_id, update_dict={"password": md5_encode(text=new_password)}):
+    if not UserMapper.update_by_id(model_id=user_id, update_dict={"password": md5_encode(text=new_password)}):
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
@@ -163,7 +163,7 @@ def change_nickname(nickname: str, user_id: int) -> None:
     :param user_id: user_id
     :return:
     """
-    user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
+    user_model: Optional[UserModel] = UserMapper.get_info_by_id(model_id=user_id)
     # 检查用户是否存在
     if not user_model:
         raise BasicException(status_code=StatusCodeEnum.NOT_FOUND_ERROR.value, error_message="该用户不存在")
@@ -171,7 +171,7 @@ def change_nickname(nickname: str, user_id: int) -> None:
     if not nickname:
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="请完善内容")
     # 修改昵称
-    if not UserMapper.update_by_id(user_id=user_id, update_dict={"nickname": nickname}):
+    if not UserMapper.update_by_id(model_id=user_id, update_dict={"nickname": nickname}):
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
 
@@ -183,7 +183,7 @@ def change_email(email: str, valid_code: str, user_id: int) -> None:
     :param user_id: user_id
     :return:
     """
-    user_model: Optional[UserModel] = UserMapper.get_info_by_id(user_id=user_id)
+    user_model: Optional[UserModel] = UserMapper.get_info_by_id(model_id=user_id)
     # 检查用户是否存在
     if not user_model:
         raise BasicException(status_code=StatusCodeEnum.NOT_FOUND_ERROR.value, error_message="该用户不存在")
@@ -200,5 +200,5 @@ def change_email(email: str, valid_code: str, user_id: int) -> None:
     # 删除Redis中的邮箱验证码
     redis_client.delete_by_key(key=email)
     # 修改邮箱
-    if not UserMapper.update_by_id(user_id=user_id, update_dict={"email": email}):
+    if not UserMapper.update_by_id(model_id=user_id, update_dict={"email": email}):
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")

@@ -14,7 +14,7 @@ def user_info_list() -> Response:
     """
     获取所有用户信息
     """
-    return ResponseUtil(data=UserLogic.info_list()).success()
+    return ResponseUtil(data=UserLogic.get_info_list()).success()
 
 
 @user.get("/now_user_info")
