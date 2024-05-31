@@ -29,7 +29,7 @@ def send_verification_code(email: str) -> None:
     # 发送邮件
     result: bool = send_email(target_email=email, title="邮箱验证码",
                               content=f"您的验证码是：{code}，"
-                                      f"{int(EmailConfig.email_code_expire * 60)}分钟内有效")
+                                      f"{int(EmailConfig.email_code_expire // 60)}分钟内有效")
     # 发送失败
     if not result:
         raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="验证码发送失败，请稍后再试")

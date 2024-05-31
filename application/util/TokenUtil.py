@@ -11,7 +11,7 @@ from application.util.StringUtil import base64_encode, random_uuid, base64_decod
 redis_client: RedisUtil = RedisUtil()
 
 
-def generate_token(user_id: str) -> str:
+def generate_token(user_id: int) -> str:
     """
     根据用ID生成token
     :param user_id: 用户id
@@ -23,7 +23,7 @@ def generate_token(user_id: str) -> str:
     # 删除该用户ID旧的token
     delete_exist_token(user_id=user_id)
     # 缓存Token，Token作为key，值为用户id
-    redis_client.set_value(key=user_id, value=token, ex=ServerConfig.token_expire)
+    redis_client.set_value(key=str(user_id), value=token, ex=ServerConfig.token_expire)
     return token
 
 
@@ -62,13 +62,13 @@ def clear_token(token: str) -> bool:
         return False
 
 
-def delete_exist_token(user_id: str) -> None:
+def delete_exist_token(user_id: int) -> None:
     """
     删除同一个用户的token，保证用户只能有一个token
     :param user_id: 用户ID
     :return: None
     """
-    redis_client.delete_by_key(key=user_id)  # 删除token
+    redis_client.delete_by_key(key=str(user_id))  # 删除token
 
 
 def get_user_id(token: str) -> str:

@@ -30,6 +30,9 @@ class BasicException(Exception):
         :return:
         """
         basic_exception: BasicException = BasicException()
+        if isinstance(exception, BasicException):
+            basic_exception.status_code = exception.status_code
+            basic_exception.error_message = exception.error_message
         # 打印、写入异常堆栈信息
         print(f"{now_format_datetime()}\tErrorInfo => ", exception)
         write_error_log(traceback.format_exc())
