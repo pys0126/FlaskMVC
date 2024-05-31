@@ -2,7 +2,6 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import String, Integer, Text
 from application.util.MysqlUtil import mysql_db
-from application.util.TimeUtil import now_timestamp
 
 
 class UserModel(mysql_db.Model):
@@ -21,9 +20,3 @@ class UserModel(mysql_db.Model):
     avatar: Mapped[str] = mapped_column(Text, nullable=True,
                                         default="https://c-ssl.duitang.com/uploads/blog/202206/12/"
                                                 "20220612164733_72d8b.jpg", comment="头像URL")
-    # 更新时间，默认为now_timestamp生成，更新时为now_timestamp生成
-    update_timestamp: Mapped[int] = mapped_column(Integer, insert_default=now_timestamp(), onupdate=now_timestamp(),
-                                                  nullable=True, comment="更新时间戳")
-    # 创建时间，默认为now_timestamp生成的
-    create_timestamp: Mapped[int] = mapped_column(Integer, insert_default=now_timestamp(), nullable=True,
-                                                  comment="创建时间戳")
