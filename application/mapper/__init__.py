@@ -4,17 +4,28 @@ from application.util.MysqlUtil import mysql_session, mysql_db
 
 class BaseMapper:
     """
-    Mapper基类 - 实现增删查改
+    Mapper基类 - 实现基本增删查改
     """
     model: mysql_db.Model = None
 
     @classmethod
-    def get_info_list(cls) -> list:
+    def count(cls) -> int:
+        """
+        数据总条数
+        :return: 数据总条数
+        """
+        return mysql_session.query(cls.model).count()
+
+    @classmethod
+    def get_info_list(cls, page_size: int = 10, current_page: int = 1) -> list:
         """
         获取数据列表
+        :param page_size: 每页条数
+        :param current_page: 当前页
         :return: 数据列表
         """
-        return mysql_session.query(cls.model).all()
+        offset: int = (current_page - 1) * page_size
+        return mysql_session.query(cls.model).limit(limit=page_size).offset(offset=offset).all()
 
     @classmethod
     def get_info_by_id(cls, model_id: int) -> Optional[mysql_db.Model]:

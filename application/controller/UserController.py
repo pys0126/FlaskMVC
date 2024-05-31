@@ -1,4 +1,4 @@
-from application.logic import UserLogic
+from application.logic.UserLogic import UserLogic
 from application.util.ResponseUtil import ResponseUtil
 from flask import Blueprint, Response, request, session
 from application.config.ServerConfig import ServerConfig
@@ -14,7 +14,10 @@ def user_info_list() -> Response:
     """
     获取所有用户信息
     """
-    return ResponseUtil(data=UserLogic.get_info_list()).success()
+    return ResponseUtil(data=UserLogic.get_info_list(
+        page_size=int(request.args.get("page_size", 10)),
+        current_page=int(request.args.get("current_page", 1))
+    )).success()
 
 
 @user.get("/now_user_info")
