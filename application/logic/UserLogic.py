@@ -1,6 +1,7 @@
 """
 用户逻辑
 """
+from flask import session
 from typing import Optional
 from application.mapper import UserMapper
 from application.util.RedisUtil import RedisUtil
@@ -106,6 +107,7 @@ def logout(user_id: int) -> None:
     """
     if not clear_token(user_id=user_id):  # 清空token
         raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="用户会话异常")
+    session.clear()  # 清空Session
 
 
 def change_avatar(avatar_url: str, user_id: int) -> None:
