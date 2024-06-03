@@ -4,7 +4,7 @@ from flask_cors import CORS
 from sqlalchemy.engine import URL
 from application.util.StringUtil import random_uuid
 from werkzeug.exceptions import MethodNotAllowed
-from application.controller.UserController import user
+from application.controller.UserController import UserController
 from application.controller.IndexController import index
 from application.config.ServerConfig import ServerConfig
 from application.config.DatabaseConfig import RedisConfig
@@ -45,4 +45,4 @@ app.register_error_handler(MethodNotAllowed, MethodException.exception_handle)
 
 # 蓝图注册
 app.register_blueprint(index, url_prefix="/")
-app.register_blueprint(user, url_prefix="/user")
+app.register_blueprint(UserController().blue_print, url_prefix="/user")
