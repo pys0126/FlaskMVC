@@ -8,7 +8,6 @@ class IndexController:
     """
     杂项
     """
-
     def __init__(self) -> None:
         self.logic: IndexLogic = IndexLogic  # 逻辑层包，不需要实例化
         self.blue_print: Blueprint = Blueprint("index", __name__)

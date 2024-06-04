@@ -10,9 +10,9 @@ class BaseController:
     控制器基类 - 实现基本增删改查
     """
 
-    def __init__(self) -> None:
-        self.logic: BaseLogic = ...  # 逻辑类
-        self.blue_print: Blueprint = ...  # 蓝图
+    def __init__(self, logic: BaseLogic, blue_print: Blueprint) -> None:
+        self.logic: BaseLogic = logic  # 逻辑类
+        self.blue_print: Blueprint = blue_print  # 蓝图
         # 添加路由
         self.blue_print.add_url_rule("/add", view_func=self.add, methods=["POST"])
         self.blue_print.add_url_rule("/delete", view_func=self.delete, methods=["POST"])

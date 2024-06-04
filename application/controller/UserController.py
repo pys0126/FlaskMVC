@@ -6,15 +6,16 @@ from application.middleware.LoginMiddleware import login_required
 
 
 class UserController(BaseController):
-
+    """
+    用户控制器
+    """
     def __init__(self) -> None:
-        super().__init__()
-        self.logic: UserLogic = UserLogic()
-        # 用户蓝图
-        self.blue_print: Blueprint = Blueprint("user", __name__)
+        self.logic: UserLogic = UserLogic()  # 实例化逻辑层
+        self.blue_print: Blueprint = Blueprint("user", __name__)  # 实例化蓝图
+        super().__init__(logic=self.logic, blue_print=self.blue_print)  # 继承父类方法，注入依赖
+        # 注册路由
         self.blue_print.add_url_rule("/login", view_func=self.login, methods=["POST"])
         self.blue_print.add_url_rule("/logout", view_func=self.logout, methods=["POST"])
-        self.blue_print.add_url_rule("/get_list", view_func=self.get_list, methods=["GET"])
         self.blue_print.add_url_rule("/now_user_info", view_func=self.now_user_info, methods=["GET"])
         self.blue_print.add_url_rule("/change_avatar", view_func=self.change_avatar, methods=["POST"])
         self.blue_print.add_url_rule("/change_password", view_func=self.change_password, methods=["POST"])
