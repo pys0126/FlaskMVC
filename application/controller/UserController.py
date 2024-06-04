@@ -1,12 +1,14 @@
+from application.controller import BaseController
 from application.logic.UserLogic import UserLogic
 from application.util.ResponseUtil import ResponseUtil
 from flask import Blueprint, Response, request, session
 from application.middleware.LoginMiddleware import login_required
 
 
-class UserController:
+class UserController(BaseController):
 
     def __init__(self) -> None:
+        super().__init__()
         self.logic: UserLogic = UserLogic()
         # 用户蓝图
         self.blue_print: Blueprint = Blueprint("user", __name__)

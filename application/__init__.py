@@ -2,17 +2,17 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy.engine import URL
-from application.util.StringUtil import random_uuid
 from werkzeug.exceptions import MethodNotAllowed
-from application.controller.UserController import UserController
-from application.controller.IndexController import index
+from application.util.StringUtil import random_uuid
 from application.config.ServerConfig import ServerConfig
 from application.config.DatabaseConfig import RedisConfig
 from application.exception.TypeException import TypeException
 from application.util.MysqlUtil import mysql_db, mysql_session
 from application.exception.BasicException import BasicException
+from application.controller.UserController import UserController
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.exception.MethodException import MethodException
+from application.controller.IndexController import IndexController
 from application.config.DatabaseConfig import MysqlConfig, SqlalchemyConfig
 
 
@@ -44,5 +44,5 @@ app.register_error_handler(TypeError, TypeException.exception_handle)
 app.register_error_handler(MethodNotAllowed, MethodException.exception_handle)
 
 # 蓝图注册
-app.register_blueprint(index, url_prefix="/")
+app.register_blueprint(IndexController().blue_print, url_prefix="/")
 app.register_blueprint(UserController().blue_print, url_prefix="/user")
