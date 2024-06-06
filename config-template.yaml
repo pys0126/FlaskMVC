@@ -1,3 +1,5 @@
+ProjectName: 'AdminSystem'  # 项目名称
+
 # 服务器配置
 ServerConfig:
   host: '0.0.0.0'  # 主机

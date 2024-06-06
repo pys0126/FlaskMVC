@@ -12,7 +12,7 @@ class BasicException(Exception):
     基本自定义异常
     """
 
-    def __init__(self, status_code: Union[int, Any] = StatusCodeEnum.ERROR.value,
+    def __init__(self, status_code: int = StatusCodeEnum.ERROR.value,
                  error_message: str = "内部错误，请稍后再试") -> None:
         """
         构造方法
