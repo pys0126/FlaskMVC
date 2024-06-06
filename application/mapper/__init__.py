@@ -1,5 +1,5 @@
 from typing import Optional
-from application.util.MysqlUtil import mysql_session, mysql_db
+from application.util.MysqlUtil import mysql_db
 
 
 class BaseMapper:
@@ -14,7 +14,7 @@ class BaseMapper:
         数据总条数
         :return: 数据总条数
         """
-        return mysql_session.query(cls.model).count()
+        return cls.model.query.count()
 
     @classmethod
     def get_info_list(cls, page_size: int = 10, current_page: int = 1) -> list:
@@ -25,7 +25,7 @@ class BaseMapper:
         :return: 数据列表
         """
         offset: int = (current_page - 1) * page_size
-        return mysql_session.query(cls.model).limit(limit=page_size).offset(offset=offset).all()
+        return cls.model.query.limit(limit=page_size).offset(offset=offset).all()
 
     @classmethod
     def get_info_by_id(cls, model_id: int) -> Optional[mysql_db.Model]:
@@ -34,7 +34,7 @@ class BaseMapper:
         :param model_id: 数据ID
         :return: 数据信息 | None
         """
-        return mysql_session.query(cls.model).filter_by(id=model_id).first()
+        return cls.model.query.filter_by(id=model_id).first()
 
     @classmethod
     def insert(cls, model: mysql_db.Model) -> bool:
@@ -44,11 +44,11 @@ class BaseMapper:
         :return:
         """
         try:
-            mysql_session.add(instance=model)
-            mysql_session.commit()
+            cls.model.add(instance=model)
+            cls.model.commit()
             return True
         except Exception:
-            mysql_session.rollback()
+            cls.model.rollback()
             return False
 
     @classmethod
@@ -60,11 +60,11 @@ class BaseMapper:
         :return:
         """
         try:
-            mysql_session.query(cls.model).filter_by(id=model_id).update(update_dict)
-            mysql_session.commit()
+            cls.model.query.filter_by(id=model_id).update(update_dict)
+            cls.model.commit()
             return True
         except Exception:
-            mysql_session.rollback()
+            cls.model.rollback()
             return False
 
     @classmethod
@@ -75,9 +75,9 @@ class BaseMapper:
         :return: 是否删除成功
         """
         try:
-            mysql_session.query(cls.model).filter(cls.model.id.in_(id_list)).delete()
-            mysql_session.commit()
+            cls.model.query.filter(cls.model.id.in_(id_list)).delete()
+            cls.model.commit()
             return True
         except Exception:
-            mysql_session.rollback()
+            cls.model.rollback()
             return False
