@@ -20,7 +20,7 @@ class BaseController:
         self.blue_print.add_url_rule("/get_list", view_func=self.get_list, methods=["GET"])
         self.blue_print.add_url_rule("/get_by_id", view_func=self.get_by_id, methods=["GET"])
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def add(self) -> Response:
         """
         新增数据
@@ -29,7 +29,7 @@ class BaseController:
         self.logic.add(data=request.get_json())
         return ResponseUtil().success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def delete(self) -> Response:
         """
         删除数据
@@ -38,7 +38,7 @@ class BaseController:
         self.logic.delete_by_ids(id_list=request.args.get("ids").split(","))
         return ResponseUtil().success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def update(self) -> Response:
         """
         更新数据
@@ -47,7 +47,7 @@ class BaseController:
         self.logic.update_by_id(data=request.get_json())
         return ResponseUtil().success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def get_by_id(self) -> Response:
         """
         根据ID获取单个数据
@@ -55,7 +55,7 @@ class BaseController:
         """
         return ResponseUtil(data=self.logic.get_info_by_id(data_id=int(request.args.get("id")))).success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def get_list(self) -> Response:
         """
         获取数据列表

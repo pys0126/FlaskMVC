@@ -15,7 +15,7 @@ class IndexController:
         self.blue_print.add_url_rule("/index", view_func=self.home, methods=["GET", "POST"])
         self.blue_print.add_url_rule("/verification_code", view_func=self.send_verification_code, methods=["POST"])
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def send_verification_code(self) -> Response:
         """
         发送验证码

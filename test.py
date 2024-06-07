@@ -1,13 +1,29 @@
-import jwt
-from application.config.ServerConfig import ServerConfig
+from flask import Flask, Blueprint
 
-payload: dict = {
-    "user_id": 1,
-    "baby": "x"
-}
+app = Flask(__name__)
 
-token: str = jwt.encode(payload=payload, key=ServerConfig.secret_key, algorithm="HS256")
-print(token)
+test = Blueprint('test', __name__)
 
-decode_str: str = jwt.decode(jwt=token, key=ServerConfig.secret_key, algorithms=["HS256"])
-print(decode_str)
+
+# 定义一个带参数的装饰器
+def log_request(logger):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            print(logger)
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+# 使用带参数的装饰器
+@test.route('/')
+@log_request("xxx")
+def index():
+    return "Hello, World!"
+
+
+if __name__ == '__main__':
+    app.register_blueprint(test, url_prefix='/')
+    app.run(debug=True)

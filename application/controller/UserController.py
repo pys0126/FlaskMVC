@@ -22,7 +22,7 @@ class UserController(BaseController):
         self.blue_print.add_url_rule("/change_nickname", view_func=self.change_nickname, methods=["POST"])
         self.blue_print.add_url_rule("/change_email", view_func=self.change_email, methods=["POST"])
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def get_list(self) -> Response:
         """
         获取所有用户信息
@@ -32,7 +32,7 @@ class UserController(BaseController):
             current_page=int(request.args.get("current_page", 1))
         )).success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def now_user_info(self) -> Response:
         """
         获取当前用户信息
@@ -45,7 +45,7 @@ class UserController(BaseController):
         """
         return ResponseUtil(data=UserLogic.login(data=request.get_json())).success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def logout(self) -> Response:
         """
         退出登录
@@ -54,7 +54,7 @@ class UserController(BaseController):
         session.clear()  # 清除session
         return ResponseUtil().success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def change_avatar(self) -> Response:
         """
         更改头像
@@ -62,7 +62,7 @@ class UserController(BaseController):
         UserLogic.change_avatar(avatar_url=request.args.get("avatar_url"), user_id=session.get("user"))
         return ResponseUtil(message="修改头像成功").success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def change_password(self) -> Response:
         """
         更改密码
@@ -71,7 +71,7 @@ class UserController(BaseController):
                                   new_password=request.args.get("new_password"), user_id=session.get("user"))
         return ResponseUtil(message="修改密码成功").success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def change_nickname(self) -> Response:
         """
         更改昵称
@@ -79,7 +79,7 @@ class UserController(BaseController):
         UserLogic.change_nickname(nickname=request.args.get("nickname"), user_id=session.get("user"))
         return ResponseUtil(message="修改昵称成功").success()
 
-    @auth_required
+    @auth_required(roles=["超级管理员"])
     def change_email(self) -> Response:
         """
         更改邮箱
