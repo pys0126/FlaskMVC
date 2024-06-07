@@ -1,11 +1,12 @@
 """
 Token工具包
 """
+import jwt
 from typing import Optional
-from application.util.TimeUtil import now_format_datetime
+from application.util.TimeUtil import now_timestamp
 from application.util.RedisUtil import RedisUtil
 from application.config.ServerConfig import ServerConfig
-from application.util.StringUtil import base64_encode, random_uuid, base64_decode
+from application.util.StringUtil import base64_encode, random_uuid
 
 # redis客户端
 redis_client: RedisUtil = RedisUtil()
@@ -17,9 +18,14 @@ def generate_token(user_id: int) -> str:
     :param user_id: 用户id
     :return: token
     """
-    # 加密原文：用户id|UUID|日期时间字符串（%Y-%m-%d %H:%M:%S）
-    text: str = f"{user_id}|{random_uuid()}|{now_format_datetime()}"
-    token: str = base64_encode(text=text)  # base64编码
+    # 其他参数：Base64(UUID + 用户id + 时间戳)
+    other_str: str = base64_encode(text=f"{random_uuid()}{user_id}{now_timestamp()}")
+    payload: dict = {
+        "user_id": user_id,
+        "baby": other_str
+    }
+    # 生成Token
+    token: str = jwt.encode(payload=payload, key=ServerConfig.secret_key, algorithm="HS256")
     # 删除该用户ID旧的token
     delete_exist_token(user_id=user_id)
     # 缓存Token，Token作为key，值为用户id
@@ -34,9 +40,10 @@ def verify_token(token: str) -> bool:
     :return: bool
     """
     try:
-        user_id: str = base64_decode(text=token).split("|")[0]
+        payload: dict = jwt.decode(jwt=token, key=ServerConfig.secret_key, algorithms=["HS256"])
+        user_id: int = payload.get("user_id")
         # 从redis中获取token
-        redis_token: Optional[str] = redis_client.get_value(key=user_id)
+        redis_token: Optional[str] = redis_client.get_value(key=str(user_id))
         if redis_token != token:
             return False
         return True
@@ -71,18 +78,19 @@ def delete_exist_token(user_id: int) -> None:
     redis_client.delete_by_key(key=str(user_id))  # 删除token
 
 
-def get_user_id(token: str) -> str:
+def get_user_id(token: str) -> int:
     """
     获取用户id
     :param token: token
-    :return: 用户id | ""
+    :return: 用户id | 0
     """
     try:
-        user_id: str = base64_decode(text=token).split("|")[0]
+        payload: dict = jwt.decode(jwt=token, key=ServerConfig.secret_key, algorithms=["HS256"])
+        user_id: int = payload.get("user_id")
         # 从redis中获取token
-        redis_token: Optional[str] = redis_client.get_value(key=user_id)
+        redis_token: Optional[str] = redis_client.get_value(key=str(user_id))
         if redis_token != token:
-            return ""
+            return 0
         return user_id
     except Exception:
-        return ""
+        return 0

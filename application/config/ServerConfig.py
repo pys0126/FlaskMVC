@@ -1,6 +1,7 @@
 """
 服务器配置
 """
+import os
 from datetime import timedelta
 from application.config import YAML_CONTENT
 
@@ -17,6 +18,7 @@ class ServerConfig:
     # Token过期时间，默认7天
     token_expire: int = int(SERVER_CONFIG.get("token_expire", int(timedelta(days=7).total_seconds())))
     token_name: str = "Authorization"  # Token在Header中的名称和session的键名
+    secret_key: str = SERVER_CONFIG.get("secret_key", os.urandom(16).hex())  # Token加密密钥
 
     file_max_size: int = int(SERVER_CONFIG.get("file_max_size", 1024 * 1024 * 3))  # 文件最大上传大小（字节），默认3M
 

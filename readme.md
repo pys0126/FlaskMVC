@@ -1,6 +1,6 @@
 # Flask MVC开发模板
 
-灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用登录验证装饰器控制接口访问权限，会话管理采用`Token` + `Redis`方式，为什么不用JWT？因为我想踢掉其他客户端会话。另外集成了字符串、日期时间等工具包，方便快速开发。
+灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用登录验证装饰器控制接口访问权限，会话管理采用`Token（JWT）` + `Redis`方式。另外集成了字符串、日期时间等工具包，方便快速开发。
 
 ## 简要说明
 

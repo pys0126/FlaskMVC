@@ -1,6 +1,13 @@
-from application.model.RoleModel import RoleModel
-from application import app
-from application.util.MysqlUtil import mysql_session
+import jwt
+from application.config.ServerConfig import ServerConfig
 
-with app.app_context():
-    print(mysql_session.query(RoleModel).filter(RoleModel.id.in_([2, 3])).all())
+payload: dict = {
+    "user_id": 1,
+    "baby": "x"
+}
+
+token: str = jwt.encode(payload=payload, key=ServerConfig.secret_key, algorithm="HS256")
+print(token)
+
+decode_str: str = jwt.decode(jwt=token, key=ServerConfig.secret_key, algorithms=["HS256"])
+print(decode_str)
