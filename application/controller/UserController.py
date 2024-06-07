@@ -2,7 +2,7 @@ from application.controller import BaseController
 from application.logic.UserLogic import UserLogic
 from application.util.ResponseUtil import ResponseUtil
 from flask import Blueprint, Response, request, session
-from application.middleware.LoginMiddleware import login_required
+from application.middleware.AuthMiddleware import auth_required
 
 
 class UserController(BaseController):
@@ -22,7 +22,7 @@ class UserController(BaseController):
         self.blue_print.add_url_rule("/change_nickname", view_func=self.change_nickname, methods=["POST"])
         self.blue_print.add_url_rule("/change_email", view_func=self.change_email, methods=["POST"])
 
-    @login_required
+    @auth_required
     def get_list(self) -> Response:
         """
         获取所有用户信息
@@ -32,7 +32,7 @@ class UserController(BaseController):
             current_page=int(request.args.get("current_page", 1))
         )).success()
 
-    @login_required
+    @auth_required
     def now_user_info(self) -> Response:
         """
         获取当前用户信息
@@ -45,7 +45,7 @@ class UserController(BaseController):
         """
         return ResponseUtil(data=UserLogic.login(data=request.get_json())).success()
 
-    @login_required
+    @auth_required
     def logout(self) -> Response:
         """
         退出登录
@@ -54,7 +54,7 @@ class UserController(BaseController):
         session.clear()  # 清除session
         return ResponseUtil().success()
 
-    @login_required
+    @auth_required
     def change_avatar(self) -> Response:
         """
         更改头像
@@ -62,7 +62,7 @@ class UserController(BaseController):
         UserLogic.change_avatar(avatar_url=request.args.get("avatar_url"), user_id=session.get("user"))
         return ResponseUtil(message="修改头像成功").success()
 
-    @login_required
+    @auth_required
     def change_password(self) -> Response:
         """
         更改密码
@@ -71,7 +71,7 @@ class UserController(BaseController):
                                   new_password=request.args.get("new_password"), user_id=session.get("user"))
         return ResponseUtil(message="修改密码成功").success()
 
-    @login_required
+    @auth_required
     def change_nickname(self) -> Response:
         """
         更改昵称
@@ -79,7 +79,7 @@ class UserController(BaseController):
         UserLogic.change_nickname(nickname=request.args.get("nickname"), user_id=session.get("user"))
         return ResponseUtil(message="修改昵称成功").success()
 
-    @login_required
+    @auth_required
     def change_email(self) -> Response:
         """
         更改邮箱

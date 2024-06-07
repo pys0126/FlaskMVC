@@ -2,13 +2,15 @@
 杂项逻辑
 """
 from application.config import PROJECT_NAME
-from application.util.StringUtil import md5_encode
 from application.util.MysqlUtil import mysql_session
 from application.util.RedisUtil import RedisUtil
 from application.util.EmailUtil import send_email
 from application.model.UserModel import UserModel
+from application.model.RoleModel import RoleModel
+from application.model.UserRoleModel import UserRoleModel
 from application.config.ServerConfig import ServerConfig
 from application.config.EmailConfig import EmailConfig
+from application.util.StringUtil import md5_encode, sha1_encode
 from application.exception.BasicException import BasicException
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.StringUtil import generate_verification_code, is_valid_email
@@ -46,9 +48,21 @@ def create_admin_user() -> None:
     try:
         # 创建超级用户
         mysql_session.add(instance=UserModel(
+            id=1,
             nickname="超级管理员",
             username=ServerConfig.super_admin_username,
-            password=md5_encode(text=ServerConfig.super_admin_password)
+            password=sha1_encode(text=md5_encode(text=ServerConfig.super_admin_password))
+        ))
+        # 创建超级用户角色
+        mysql_session.add(instance=RoleModel(
+            id=1,
+            name="超级管理员",
+            description="超级管理员，拥有所有权限"
+        ))
+        # 创建超级用户与角色关联
+        mysql_session.add(instance=UserRoleModel(
+            user_id=1,
+            role_id=1
         ))
         mysql_session.commit()
     except Exception:

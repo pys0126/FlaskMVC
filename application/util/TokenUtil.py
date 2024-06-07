@@ -86,7 +86,7 @@ def get_user_id(token: str) -> int:
     """
     try:
         payload: dict = jwt.decode(jwt=token, key=ServerConfig.secret_key, algorithms=["HS256"])
-        user_id: int = payload.get("user_id")
+        user_id: int = int(payload.get("user_id"))
         # 从redis中获取token
         redis_token: Optional[str] = redis_client.get_value(key=str(user_id))
         if redis_token != token:

@@ -18,9 +18,8 @@ class UserRoleMapper(BaseMapper):
         :param user_id: 用户ID
         :return: 角色模型
         """
-        return cls.model.query.join(target=UserRoleModel,
-                                    onclause=RoleModel.id == UserRoleModel.role_id
-                                    ).filter(UserRoleModel.user_id == user_id).first()
+        user_role_model: Optional[UserRoleModel] = cls.model.query.filter_by(user_id=user_id).first()
+        return RoleModel.query.filter_by(id=user_role_model.role_id).first() if user_role_model else None
 
     @classmethod
     def get_user_info_list_by_role_id(cls, role_id: int) -> list:
@@ -29,6 +28,8 @@ class UserRoleMapper(BaseMapper):
         :param role_id: 角色ID
         :return: 用户模型列表
         """
-        return cls.model.query.join(target=UserRoleModel,
-                                    onclause=UserModel.id == UserRoleModel.user_id
-                                    ).filter(UserRoleModel.role_id == role_id).all()
+        user_role_model_list: list = cls.model.query.filter_by(role_id=role_id).all()
+        user_model_list: list = []
+        for user_role_model in user_role_model_list:
+            user_model_list.append(UserModel.query.filter_by(id=user_role_model.user_id).first())
+        return user_model_list

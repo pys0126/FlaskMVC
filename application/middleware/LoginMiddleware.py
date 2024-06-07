@@ -10,9 +10,9 @@ from application.util.TokenUtil import verify_token, get_user_id
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 
 
-def login_required(func: Any):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+def login_required(func: Any) -> Any:
+    @wraps(wrapped=func)
+    def wrapper(*args, **kwargs) -> Any:
         try:
             # 过滤掉Bearer 前缀
             token: str = request.headers.get(ServerConfig.token_name).split("Bearer ")[1]

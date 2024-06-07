@@ -10,7 +10,8 @@ from application.mapper.UserMapper import UserMapper
 from application.exception.BasicException import BasicException
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
 from application.util.TokenUtil import clear_token, generate_token
-from application.util.StringUtil import random_uuid, md5_encode, is_valid_url, is_valid_password, is_valid_email
+from application.util.StringUtil import (random_uuid, md5_encode, sha1_encode, is_valid_url, is_valid_password,
+                                         is_valid_email)
 
 
 class UserLogic(BaseLogic):
@@ -81,7 +82,7 @@ class UserLogic(BaseLogic):
             raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="邮箱验证码错误")
         # 删除Redis中的邮箱验证码
         cls.redis_client.delete_by_key(key=data.get("email"))
-        data["password"] = md5_encode(text=str(data.get("password")))  # md5加密密码，先转为字符串
+        data["password"] = sha1_encode(text=md5_encode(text=str(data.get("password"))))  # md5 + sha1 加密密码
         user_model: UserModel = UserModel(**data)
         user_model.id = random_uuid()  # 随机生成ID
         if not UserMapper.insert(model=user_model):
@@ -106,7 +107,7 @@ class UserLogic(BaseLogic):
         if not user_model:
             raise BasicException(status_code=StatusCodeEnum.NOT_FOUND_ERROR.value, error_message="该用户不存在")
         # 检查密码是否正确
-        if md5_encode(text=data.get("password")) != user_model.password:
+        if sha1_encode(text=md5_encode(text=str(data.get("password")))) != user_model.password:
             raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="密码错误")
         return generate_token(user_id=user_model.id)
 
@@ -157,14 +158,15 @@ class UserLogic(BaseLogic):
         if not all([old_password, new_password]):
             raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value, error_message="请完善内容")
         # 检查密码是否正确
-        if user_model.password != md5_encode(text=old_password):
+        if user_model.password != sha1_encode(text=md5_encode(text=old_password)):
             raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value, error_message="旧密码错误")
         # 检查密码是否符合规范
         if not is_valid_password(text=new_password):
             raise BasicException(status_code=StatusCodeEnum.BAD_REQUEST_ERROR.value,
                                  error_message="密码不符合规范（至少一个字母，至少一个数字，至少为6位）")
         # 修改密码
-        if not UserMapper.update_by_id(model_id=user_id, update_dict={"password": md5_encode(text=new_password)}):
+        if not UserMapper.update_by_id(model_id=user_id,
+                                       update_dict={"password": sha1_encode(text=md5_encode(text=new_password))}):
             raise BasicException(status_code=StatusCodeEnum.ERROR.value, error_message="内部错误，请稍后再试")
 
     @classmethod

@@ -12,8 +12,8 @@ class UserModel(mysql_db.Model):
     nickname: Mapped[str] = mapped_column(String(8), nullable=True, comment="昵称，长度为8")
     # 用户名
     username: Mapped[str] = mapped_column(String(16), nullable=True, unique=True, comment="用户名，长度为16，唯一")
-    # 密码，32位长度md5加密
-    password: Mapped[str] = mapped_column(String(32), nullable=True, comment="密码，md5加密，长度32")
+    # 密码，40位长度sha1(md5)
+    password: Mapped[str] = mapped_column(String(40), nullable=True, comment="密码，sha1(md5)，长度40")
     # 邮箱
     email: Mapped[str] = mapped_column(String(32), nullable=True, comment="邮箱，长度为32")
     # 头像URL

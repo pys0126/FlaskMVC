@@ -57,6 +57,19 @@ def md5_encode(text: str) -> str:
     return md5.hexdigest()
 
 
+def sha1_encode(text: str) -> str:
+    """
+    SHA-1加密
+    :param text: 待加密文本
+    :return: 加密后的文本
+    """
+    # 创建一个新的hash对象
+    sha_signature = hashlib.sha1(text.encode())
+    # 获取加密后的字符串
+    sha_signature_hex = sha_signature.hexdigest()
+    return sha_signature_hex
+
+
 def is_valid_email(text: str) -> bool:
     """
     验证是否是邮箱

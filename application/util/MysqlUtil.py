@@ -1,6 +1,7 @@
-from sqlalchemy import Integer
+from datetime import datetime
+from sqlalchemy import DateTime, String
 from flask_sqlalchemy import SQLAlchemy
-from application.util.TimeUtil import now_timestamp
+from application.util.TimeUtil import now_format_datetime
 from sqlalchemy.orm import DeclarativeBase, scoped_session, Session, mapped_column, Mapped
 
 
@@ -8,12 +9,15 @@ class BaseModel(DeclarativeBase):
     """
     模型基类
     """
-    # 更新时间，默认为now_timestamp生成，更新时为now_timestamp生成
-    update_timestamp: Mapped[int] = mapped_column(Integer, insert_default=now_timestamp(), onupdate=now_timestamp(),
-                                                  nullable=True, comment="更新时间戳")
-    # 创建时间，默认为now_timestamp生成的
-    create_timestamp: Mapped[int] = mapped_column(Integer, insert_default=now_timestamp(), nullable=True,
-                                                  comment="创建时间戳")
+    # 更新时间，默认为now_format_datetime生成，更新时为now_format_datetime生成
+    update_datetime: Mapped[datetime] = mapped_column(DateTime, insert_default=now_format_datetime(),
+                                                      onupdate=now_format_datetime(),
+                                                      nullable=True, comment="更新时间")
+    # 创建时间，默认为now_format_datetime生成的
+    create_datetime: Mapped[datetime] = mapped_column(DateTime, insert_default=now_format_datetime(), nullable=True,
+                                                      comment="创建时间")
+    # 备注
+    remark: Mapped[str] = mapped_column(String(300), nullable=True, comment="备注")
 
     def to_dict(self) -> dict:
         """

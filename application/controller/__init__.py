@@ -1,4 +1,4 @@
-from application.middleware.LoginMiddleware import login_required
+from application.middleware.AuthMiddleware import auth_required
 from application.util.ResponseUtil import ResponseUtil
 from application.logic import BaseLogic
 from flask.blueprints import Blueprint
@@ -20,7 +20,7 @@ class BaseController:
         self.blue_print.add_url_rule("/get_list", view_func=self.get_list, methods=["GET"])
         self.blue_print.add_url_rule("/get_by_id", view_func=self.get_by_id, methods=["GET"])
 
-    @login_required
+    @auth_required
     def add(self) -> Response:
         """
         新增数据
@@ -29,7 +29,7 @@ class BaseController:
         self.logic.add(data=request.get_json())
         return ResponseUtil().success()
 
-    @login_required
+    @auth_required
     def delete(self) -> Response:
         """
         删除数据
@@ -38,7 +38,7 @@ class BaseController:
         self.logic.delete_by_ids(id_list=request.args.get("ids").split(","))
         return ResponseUtil().success()
 
-    @login_required
+    @auth_required
     def update(self) -> Response:
         """
         更新数据
@@ -47,7 +47,7 @@ class BaseController:
         self.logic.update_by_id(data=request.get_json())
         return ResponseUtil().success()
 
-    @login_required
+    @auth_required
     def get_by_id(self) -> Response:
         """
         根据ID获取单个数据
@@ -55,7 +55,7 @@ class BaseController:
         """
         return ResponseUtil(data=self.logic.get_info_by_id(data_id=int(request.args.get("id")))).success()
 
-    @login_required
+    @auth_required
     def get_list(self) -> Response:
         """
         获取数据列表
