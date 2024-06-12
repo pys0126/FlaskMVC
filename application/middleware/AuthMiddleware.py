@@ -37,12 +37,17 @@ def auth_required(roles: list = None, exclude_roles: list = None) -> Any:
         @login_required
         def wrapper(*args, **kwargs) -> Any:
             user_id: int = session.get("user")
-            role_info: RoleModel = UserRoleMapper.get_role_info_by_user_id(user_id=user_id)
-            # 如果没有角色信息/角色不在允许的角色列表/角色在排除的角色列表，则没有权限访问
-            if not role_info or role_info.name not in roles or role_info.name in exclude_roles:
-                raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value,
-                                     error_message="该帐号没有权限访问")
-            return func(*args, **kwargs)
+            # 查询当用户的所有角色
+            role_list: list = UserRoleMapper.get_role_info_by_user_id(user_id=user_id)
+            for role_info in role_list:
+                # 如果当前角色在允许的角色列表中，则通过
+                if role_info.name in roles:
+                    return func(*args, **kwargs)
+                # 如果当前角色在排除的角色列表中，则跳出循环
+                elif role_info.name in exclude_roles:
+                    break
+            raise BasicException(status_code=StatusCodeEnum.AUTHORITY_ERROR.value,
+                                 error_message=f"该帐号没有权限访问，ID：{user_id}")
 
         return wrapper
 

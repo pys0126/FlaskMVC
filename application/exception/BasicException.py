@@ -38,3 +38,9 @@ class BasicException(Exception):
         write_error_log(traceback.format_exc())
         # 返回Response
         return ResponseUtil(code=basic_exception.status_code, message=basic_exception.error_message).fail()
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return self.error_message

@@ -1,7 +1,5 @@
-from typing import Optional
 from application.mapper import BaseMapper
 from application.model.RoleModel import RoleModel
-from application.util.MysqlUtil import mysql_session
 
 
 class RoleMapper(BaseMapper):
@@ -9,3 +7,11 @@ class RoleMapper(BaseMapper):
     角色Mapper
     """
     model: RoleModel = RoleModel
+
+    @classmethod
+    def get_role_name_list(cls) -> list:
+        """
+        获取角色名称列表
+        :return:
+        """
+        return [role.name for role in cls.model.query.all()]

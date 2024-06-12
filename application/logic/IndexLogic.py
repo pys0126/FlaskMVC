@@ -2,11 +2,11 @@
 杂项逻辑
 """
 from application.config import PROJECT_NAME
-from application.util.MysqlUtil import mysql_session
 from application.util.RedisUtil import RedisUtil
 from application.util.EmailUtil import send_email
 from application.model.UserModel import UserModel
 from application.model.RoleModel import RoleModel
+from application.util.MysqlUtil import mysql_session
 from application.model.UserRoleModel import UserRoleModel
 from application.config.ServerConfig import ServerConfig
 from application.config.EmailConfig import EmailConfig
@@ -67,3 +67,5 @@ def create_admin_user() -> None:
         mysql_session.commit()
     except Exception:
         mysql_session.rollback()
+    finally:
+        mysql_session.remove()

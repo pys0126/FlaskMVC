@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import DateTime, String
+from sqlalchemy import DateTime
 from flask_sqlalchemy import SQLAlchemy
 from application.util.TimeUtil import now_format_datetime
 from sqlalchemy.orm import DeclarativeBase, scoped_session, Session, mapped_column, Mapped
@@ -16,8 +16,6 @@ class BaseModel(DeclarativeBase):
     # 创建时间，默认为now_format_datetime生成的
     create_datetime: Mapped[datetime] = mapped_column(DateTime, insert_default=now_format_datetime(), nullable=True,
                                                       comment="创建时间")
-    # 备注
-    remark: Mapped[str] = mapped_column(String(300), nullable=True, comment="备注")
 
     def to_dict(self) -> dict:
         """

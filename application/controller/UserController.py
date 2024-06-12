@@ -22,17 +22,43 @@ class UserController(BaseController):
         self.blue_print.add_url_rule("/change_nickname", view_func=self.change_nickname, methods=["POST"])
         self.blue_print.add_url_rule("/change_email", view_func=self.change_email, methods=["POST"])
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
+    def add(self) -> Response:
+        """
+        添加用户
+        """
+        return super().add()
+
+    @auth_required(roles=["superuser"])
+    def update(self) -> Response:
+        """
+        更新用户信息
+        """
+        return super().update()
+
+    @auth_required(roles=["superuser"])
+    def get_by_id(self) -> Response:
+        """
+        根据ID获取信息
+        :return:
+        """
+        return super().get_by_id()
+
+    @auth_required(roles=["superuser"])
+    def delete(self) -> Response:
+        """
+        删除用户
+        """
+        return super().delete()
+
+    @auth_required(roles=["superuser"])
     def get_list(self) -> Response:
         """
         获取所有用户信息
         """
-        return ResponseUtil(data=UserLogic.get_info_list(
-            page_size=int(request.args.get("page_size", 10)),
-            current_page=int(request.args.get("current_page", 1))
-        )).success()
+        return super().get_list()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def now_user_info(self) -> Response:
         """
         获取当前用户信息
@@ -45,7 +71,7 @@ class UserController(BaseController):
         """
         return ResponseUtil(data=UserLogic.login(data=request.get_json())).success()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def logout(self) -> Response:
         """
         退出登录
@@ -54,7 +80,7 @@ class UserController(BaseController):
         session.clear()  # 清除session
         return ResponseUtil().success()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def change_avatar(self) -> Response:
         """
         更改头像
@@ -62,7 +88,7 @@ class UserController(BaseController):
         UserLogic.change_avatar(avatar_url=request.args.get("avatar_url"), user_id=session.get("user"))
         return ResponseUtil(message="修改头像成功").success()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def change_password(self) -> Response:
         """
         更改密码
@@ -71,7 +97,7 @@ class UserController(BaseController):
                                   new_password=request.args.get("new_password"), user_id=session.get("user"))
         return ResponseUtil(message="修改密码成功").success()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def change_nickname(self) -> Response:
         """
         更改昵称
@@ -79,7 +105,7 @@ class UserController(BaseController):
         UserLogic.change_nickname(nickname=request.args.get("nickname"), user_id=session.get("user"))
         return ResponseUtil(message="修改昵称成功").success()
 
-    @auth_required(roles=["超级管理员"])
+    @auth_required(roles=["superuser"])
     def change_email(self) -> Response:
         """
         更改邮箱
