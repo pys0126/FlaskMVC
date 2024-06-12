@@ -1,6 +1,6 @@
 # Flask MVC
 
-Flask管理后台API开发模板，快速构建CRUD，采用MVC模式。灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用装饰器控制接口访问权限，会话管理采用`Token（JWT）` + `Redis`方式。另外集成了字符串、日期时间等工具包，方便快速开发。
+Flask管理后台API开发模板，快速构建CRUD，采用MVC模式。灵感源自[`SpringBoot`](https://spring.io/)，集成了`Flask、Flask-SQLAlchemy、Flask-Cors、Redis、HttpX、PIL、PyYaml`等框架。采用装饰器控制接口访问权限（基于角色的权限控制），会话管理采用`Token（JWT）` + `Redis`方式。另外集成了字符串、日期时间等工具包，方便快速开发。
 
 ## 简要说明
 

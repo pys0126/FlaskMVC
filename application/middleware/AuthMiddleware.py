@@ -2,18 +2,9 @@
 权限相关中间件
 """
 from typing import Any
+from flask import session
 from functools import wraps
-from flask import session, request
-from application.model.UserModel import UserModel
-from application.mapper.UserMapper import UserMapper
-from application.model.RoleModel import RoleModel
-from application.mapper.RoleMapper import RoleMapper
-from application.model.PermissionModel import PermissionModel
-from application.mapper.PermissionMapper import PermissionModel
-from application.model.UserRoleModel import UserRoleModel
 from application.mapper.UserRoleMapper import UserRoleMapper
-from application.model.RolePermissionModel import RolePermissionModel
-from application.mapper.RolePermissionMapper import RolePermissionModel
 from application.middleware.LoginMiddleware import login_required
 from application.exception.BasicException import BasicException
 from application.enumeration.StatusCodeEnum import StatusCodeEnum
