@@ -6,6 +6,7 @@ redis
 pillow
 pyyaml
 pymysql
-gunicorn
+asgiref
+hypercorn
 flask-cors
 flask-sqlalchemy

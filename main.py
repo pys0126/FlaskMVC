@@ -1,12 +1,16 @@
 import os
 import platform
-from application import app
 from application.logic import IndexLogic
 from application.config.ServerConfig import ServerConfig
+from asgiref.wsgi import WsgiToAsgi
+from application import app
+
+# 将app转换为asgi
+asgi_app: WsgiToAsgi = WsgiToAsgi(app)
 
 
 # 定义启动命令
-command: str = (f"gunicorn --log-level debug application:app -b {ServerConfig.host}:{ServerConfig.port} -w "
+command: str = (f"hypercorn main:asgi_app --log-level debug -b {ServerConfig.host}:{ServerConfig.port} -w "
                 f"{ServerConfig.workers}")
 # 获取系统类型
 system: str = platform.system()
@@ -16,10 +20,5 @@ if __name__ == "__main__":
         # 创建超级用户及其角色
         IndexLogic.create_admin_user()
 
-    # 启动Flask服务器
-    if system == "Linux":
-        os.system(command=command)
-    elif system == "Windows":
-        app.run(host=ServerConfig.host, port=ServerConfig.port, debug=True)
-    else:
-        print("无法识别当前系统")
+    # 启动hypercorn服务器
+    os.system(command=command)
