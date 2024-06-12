@@ -56,7 +56,7 @@ def create_admin_user() -> None:
         # 创建超级用户角色
         mysql_session.add(instance=RoleModel(
             id=1,
-            name="超级管理员",
+            name="superuser",
             description="超级管理员，拥有所有权限"
         ))
         # 创建超级用户与角色关联
