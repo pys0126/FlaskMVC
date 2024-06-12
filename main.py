@@ -1,4 +1,5 @@
 import os
+import platform
 from application.logic import IndexLogic
 from application.config.ServerConfig import ServerConfig
 from asgiref.wsgi import WsgiToAsgi
@@ -17,5 +18,9 @@ if __name__ == "__main__":
         # 创建超级用户及其角色
         IndexLogic.create_admin_user()
 
-    # 启动hypercorn服务器
-    os.system(command=command)
+    # 如果系统是windows，则使用flask自带的服务器启动
+    if platform.system().lower() == "windows":
+        app.run(host=ServerConfig.host, port=ServerConfig.port, workers=ServerConfig.workers, debug=True)
+    else:
+        # 启动hypercorn服务器
+        os.system(command=command)
